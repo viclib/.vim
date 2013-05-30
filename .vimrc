@@ -1,6 +1,6 @@
 "set copyindent " copy the previous indentation on autoindenting
 set hidden
-" set nowrap        " don't wrap lines*/ 
+set nowrap        " don't wrap lines*/ 
 set tabstop=4     " a tab is four spaces 
 set backspace=indent,eol,start " allow backspacing over everything in insert mode 
 set autoindent " always set autoindenting on 
@@ -24,34 +24,83 @@ set noswapfile
 set nocompatible
 set viminfo='1000,f1,<500,:100,/100,h  "
 
+" no annoying start screen
+set shortmess=atl
+
+:nnoremap <expr> r ':!clear<cr>:w!<cr>:!node ~/Viclib/node_modules/makels.js %:p<cr>'
+:nnoremap <expr> <leader>i ':!clear<cr>:w!<cr>:!node ~/Viclib/node_modules/makels.js ~/Viclib/smasharena/index.ls<cr>'
+
 " NERDTree stuff
 :let NERDTreeIgnore = ['\.js$']
 :let NERDTreeChDirMode = 2
 ":nmap <leader>t :NERDTree<cr>:set nu<cr>
 ":nmap <leader>t :NERDTreeToggle<cr>
-:nmap <expr> <enter> "@_<C-W>99h". v:count1 ."Go<C-w>l"
+:nmap <expr> <enter> v:count1 <= 1 ? "<C-h>C<C-w>p" : "@_<C-W>99h". v:count1 ."Go<C-w>l"
+:map <delete> <C-h>u<C-w>p
+":nmap <expr> <leader>c "@_<C-W>99h". v:count1 ."Go<C-w>l"
 au VimEnter * NERDTree
 au VimEnter * set nu
 au VimEnter * wincmd p
-":nmap <SID>o o<
+:nmap <expr> <leader>t ":ClearCtrlPCache<cr>:NERDTree<cr>:set nu<cr><C-w>l"
+
+" save easier
+:nmap <leader>s :w!<cr>
+
+" Can I solve the ESC out of home problem?
+:inoremap ☮ <esc>
+:vnoremap ☮ <esc>
+:cnoremap ☮ <esc>
+" test test when I'm used to using ;j instead of <esc>
+":inoremap <esc> <esc>a
+
+" OSX shared clipboard
+:set clipboard=unnamed
 
 " quit
 :nmap <leader>q :q!<cr>
-
 
 :map <expr> <space> ":CtrlP ".getcwd()."<cr>"
 ":let g:ctrl_p_working_path_mode = 'r'
 ":let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn|js)$'
 :set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.js     " MacOSX/Linux
+
+
+
+
+" ConqueTerm
+:nmap <expr> <leader>c ":sp<cr>12<C-w>+99<C-w>j:ConqueTerm bash<cr>"
+":nnoremap <leader>r 10<C-w>jaclear<cr>sudo node server 80<cr><esc><C-w>p
+
 " PBufferWindows
-:map <left> <C-w><
-:map <right> <C-w>>
-:map <up> <C-w>-
-:map <down> <C-w>+
-:map <c-j> <C-w>j
-:map <c-k> <C-w>k
-:map <c-h> <C-w>h
-:map <c-l> <C-w>l
+:map <left> 4<C-w><
+:map <right> 4<C-w>>
+:map <up> 4<C-w>-
+:map <down> 4<C-w>+
+:noremap <C-j> <esc><C-w>j
+:noremap <C-k> <esc><C-w>k
+:noremap <C-h> <esc><C-w>h
+:noremap <C-l> <esc><C-w>l
+:map! <C-j> <esc><C-w>j
+:map! <C-k> <esc><C-w>k
+:map! <C-h> <esc><C-w>h
+:map! <C-l> <esc><C-w>l
+"au BufEnter * :!ls
+
+
+" Change Color when entering Insert Mode
+hi cursorline cterm=none ctermbg=white
+au InsertEnter * set cursorline
+au InsertLeave * set nocursorline
+
+"highlight Cursor guifg=white guibg=black
+"highlight iCursor guifg=white guibg=steelblue
+"set guicursor=n-v-c:block-Cursor
+"set guicursor+=i:ver100-iCursor
+"set guicursor+=n-v-c:blinkon0
+"set guicursor+=i:blinkwait10
+
+
+
 
 " vim-ls
 call pathogen#runtime_append_all_bundles()
@@ -89,12 +138,6 @@ hi link lsReservedError NONE
 "		\ ':!lsc -d -b -c %<cr>:!' + (stridx(@%,'app')!=-1 ? 'browserify' : 'node') + '.@%[:-4]<cr>' :
 "		\ ':!node %<cr>')
 
-:nnoremap <expr> r 
-	\ ':!clear<cr>' .
-	\ ':w!<cr>' . 
-	\ (stridx(@%,".ls")!=-1 ? ':!lsc -d -c %<cr>' : '') .
-	\ ':!osascript ~/applescripts/chromereload.scpt &<cr>' .
-	\ (strlen(matchstr(@%,'\.[jl]s$'))>0 ? ':!node ' .@%[:-4].'.js<cr>' : '')
 
 " :nmap <expr> R
 "	\ ':w!<cr>' . 
@@ -118,10 +161,10 @@ hi link lsReservedError NONE
 " ':!rsync -r -e ssh ~/Viclib/* vh@maia.im:~/Viclib/ &<cr>' 
 ":imap <D-s> <esc><D-s>
 
-
-
-" :nnoremap <expr> R ':w!<cr>' . ':!osascript ~/applescripts/chromereload.scpt &<cr>' . ':!killall node<cr>:!node % &<cr>'*/
-
+" default the statusline to green when entering Vim
+hi StatusLine ctermfg=lightblue ctermbg=black
+hi StatusLineNC ctermfg=lightgray ctermbg=black
+hi VertSplit ctermfg=lightgray ctermbg=black
 
 " NERDComment
 :map ! <leader>c<space>
@@ -139,7 +182,7 @@ hi link lsReservedError NONE
 " vimrc autosave
 augroup myvimrc
     au!
-    au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC
+    au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so ~/.vim/.vimrc "$MYVIMRC
 augroup END
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
@@ -170,7 +213,7 @@ call pathogen#helptags()
 :nnoremap <leader>m :marks abcdefghijklmnopqrstuvwxyz<cr>
 
 " quit
-:map <leader>q :q<cr>
+:map <leader>q :q!<cr>:q!<cr>:q!<cr>:q!<cr>:q!<cr>:q!<cr>:q!<cr>
 
 
 " navigates through marks (if exist), if not, moves fast
@@ -257,9 +300,9 @@ endfunction
 " FOLDING
 map - zr
 map + zm
-set foldtext=MyFoldText()
-set foldmethod=expr
-set foldexpr=GetPotionFold(v:lnum)
+"set foldtext=MyFoldText()
+"set foldmethod=expr
+"set foldexpr=GetPotionFold(v:lnum)
 autocmd BufEnter * normal zR
 function! MyFoldText()
 	let lines = 1 + v:foldend - v:foldstart
