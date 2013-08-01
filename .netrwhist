@@ -1,5 +1,5 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =7
+let g:netrw_dirhist_cnt =9
 let g:netrw_dirhist_1='/Users/vhsmaia/Pictures'
 let g:netrw_dirhist_2='/usr/share/vim/vim73/doc'
 let g:netrw_dirhist_3='/Users/vhsmaia/Viclib'
@@ -7,3 +7,5 @@ let g:netrw_dirhist_4='/Users/vhsmaia/Viclib/quicksort'
 let g:netrw_dirhist_5='/Users/vhsmaia/Viclib/smasharena'
 let g:netrw_dirhist_6='/Users/vhsmaia/.vim/bundle/RocketJump'
 let g:netrw_dirhist_7='/Users/vhsmaia/Viclib/mememan/node_modules/browserify'
+let g:netrw_dirhist_8='/Users/vhsmaia/Viclib'
+let g:netrw_dirhist_9='/Users/vhsmaia/Viclib/stuff/anderson'

@@ -1,3 +1,9 @@
+":nnoremap <expr> <leader>r ':!clear<cr>:w!<cr>:!node ~/Viclib/node_modules/makels.js %:p<cr>:!sudo forever restartall<cr>'
+
+
+set ttyfast
+set ttyscroll=3
+set lazyredraw
 "set copyindent " copy the previous indentation on autoindenting
 set hidden
 set nowrap        " don't wrap lines*/ 
@@ -27,8 +33,18 @@ set viminfo='1000,f1,<500,:100,/100,h  "
 " no annoying start screen
 set shortmess=atl
 
-:nnoremap <expr> r ':!clear<cr>:w!<cr>:!node ~/Viclib/node_modules/makels.js %:p<cr>'
+":nmap <leader>d :w!<cr>:!clear<cr>:!javac %<cr>:!java %<cr>
+:nmap <leader>d :w!<cr>:!clear<cr>:!ghc -o %:r %<cr>:!./%:r<cr>
 :nnoremap <expr> <leader>i ':!clear<cr>:w!<cr>:!node ~/Viclib/node_modules/makels.js ~/Viclib/smasharena/index.ls<cr>'
+
+:nnoremap <expr> r ':!clear<cr>:w!<cr>'.(
+	\ &ft=='python' ? ':!python %<cr>' : 
+	\ &ft=='scheme' ? ':!racket %<cr>' : 
+	\ &ft=='haskell' ? ':!ghc -o %:r %<cr>:!./%:r<cr>' : 
+	\ &ft=='c' ? ':!gcc -std=c99 % -o %:r<cr>:!./%:r<cr>' : 
+	\ ':!node ~/Viclib/node_modules/makels.js %:p<cr>')
+":nmap <expr> <leader>s 'r<cr>'
+:nmap <expr> <leader>r 'r:!killall node; node ~/Viclib/server.js 8080<cr>'
 
 " NERDTree stuff
 :let NERDTreeIgnore = ['\.js$']
@@ -36,15 +52,12 @@ set shortmess=atl
 ":nmap <leader>t :NERDTree<cr>:set nu<cr>
 ":nmap <leader>t :NERDTreeToggle<cr>
 :nmap <expr> <enter> v:count1 <= 1 ? "<C-h>C<C-w>p" : "@_<C-W>99h". v:count1 ."Go<C-w>l"
-:map <delete> <C-h>u<C-w>p
+":nmap <backspace> <C-h>u<C-w>p
 ":nmap <expr> <leader>c "@_<C-W>99h". v:count1 ."Go<C-w>l"
 au VimEnter * NERDTree
 au VimEnter * set nu
 au VimEnter * wincmd p
 :nmap <expr> <leader>t ":ClearCtrlPCache<cr>:NERDTree<cr>:set nu<cr><C-w>l"
-
-" save easier
-:nmap <leader>s :w!<cr>
 
 " Can I solve the ESC out of home problem?
 :inoremap ☮ <esc>
@@ -56,9 +69,6 @@ au VimEnter * wincmd p
 " OSX shared clipboard
 :set clipboard=unnamed
 
-" quit
-:nmap <leader>q :q!<cr>
-
 :map <expr> <space> ":CtrlP ".getcwd()."<cr>"
 ":let g:ctrl_p_working_path_mode = 'r'
 ":let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn|js)$'
@@ -68,7 +78,7 @@ au VimEnter * wincmd p
 
 
 " ConqueTerm
-:nmap <expr> <leader>c ":sp<cr>12<C-w>+99<C-w>j:ConqueTerm bash<cr>"
+":nmap <expr> <leader>c ":sp<cr>12<C-w>+99<C-w>j:ConqueTerm bash<cr>"
 ":nnoremap <leader>r 10<C-w>jaclear<cr>sudo node server 80<cr><esc><C-w>p
 
 " PBufferWindows
@@ -126,6 +136,7 @@ hi link lsReservedError NONE
 
 " leader = ,
 " :let mapleader = "," 
+
 :map , <leader>
 
 " join
@@ -191,16 +202,14 @@ call pathogen#helptags()
 :nnoremap <C-u> <C-o>
 ":nnoremap <C-i> <C-i>
 
-" commands
-" :nnoremap <leader>q q: 
-
 " easymotion
 :nmap f <leader><leader>f
 :vmap f <leader><leader>f
 :omap f <leader><leader>f
-:nmap F <leader><leader>F
-:vmap F <leader><leader>F
-:omap F <leader><leader>F
+"not necessary anymore becaus eof supasorn's awesome fork with backwards/forward search (:
+":nmap F <leader><leader>F
+":vmap F <leader><leader>F
+":omap F <leader><leader>F
 
 " CTRL+y = redo
 ":nmap <C-y> U
@@ -213,14 +222,13 @@ call pathogen#helptags()
 :nnoremap <leader>m :marks abcdefghijklmnopqrstuvwxyz<cr>
 
 " quit
-:map <leader>q :q!<cr>:q!<cr>:q!<cr>:q!<cr>:q!<cr>:q!<cr>:q!<cr>
-
+:map <leader>q :q!<cr>:q!<cr>:q!<cr>:q!<cr>:q!<cr>:q!<cr>:q!<cr>:q!<cr>:q!<cr>:q!<cr>:q!<cr>:q!<cr>:q!<cr>
 
 " navigates through marks (if exist), if not, moves fast
-:nnoremap <S-j> 4j
-:nnoremap <S-k> 4k
-:vnoremap <S-j> 4j
-:vnoremap <S-k> 4k
+:nnoremap <S-j> 6j
+:nnoremap <S-k> 6k
+:vnoremap <S-j> 6j
+:vnoremap <S-k> 6k
 
 " line join (because <S-j> is taken)
 :nnoremap <leader>j J
@@ -244,7 +252,6 @@ call pathogen#helptags()
 :nnoremap L $
 :vnoremap H ^
 :vnoremap L $
-
 
 set autoread
 " augroup checktime

@@ -197,6 +197,7 @@ let s:delimiterMap = {
     \ 'java': { 'left': '//', 'leftAlt': '/*', 'rightAlt': '*/' },
     \ 'javacc': { 'left': '//', 'leftAlt': '/*', 'rightAlt': '*/' },
     \ 'javascript': { 'left': '//', 'leftAlt': '/*', 'rightAlt': '*/' },
+    \ 'scheme': { 'left': ';', 'leftAlt': '@;{', 'rightAlt': '}' },
     \ 'vim': { 'left': '"'},
     \ 'ls': { 'left': '#', 'leftAlt': '/*', 'rightAlt': '*/' },
     \ 'jsugar': { 'left': '//', 'leftAlt': '/*', 'rightAlt': '*/' },
