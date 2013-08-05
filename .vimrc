@@ -1,10 +1,6 @@
-":nnoremap <expr> <leader>r ':!clear<cr>:w!<cr>:!node ~/Viclib/node_modules/makels.js %:p<cr>:!sudo forever restartall<cr>'
-
-
 set ttyfast
 set ttyscroll=3
 set lazyredraw
-"set copyindent " copy the previous indentation on autoindenting
 set hidden
 set nowrap        " don't wrap lines*/ 
 set tabstop=4     " a tab is four spaces 
@@ -29,11 +25,8 @@ set nobackup
 set noswapfile
 set nocompatible
 set viminfo='1000,f1,<500,:100,/100,h  "
+set shortmess=atl " no annoying start screen
 
-" no annoying start screen
-set shortmess=atl
-
-":nmap <leader>d :w!<cr>:!clear<cr>:!javac %<cr>:!java %<cr>
 :nmap <leader>d :w!<cr>:!clear<cr>:!ghc -o %:r %<cr>:!./%:r<cr>
 :nnoremap <expr> <leader>i ':!clear<cr>:w!<cr>:!node ~/Viclib/node_modules/makels.js ~/Viclib/smasharena/index.ls<cr>'
 
@@ -43,17 +36,13 @@ set shortmess=atl
 	\ &ft=='haskell' ? ':!ghc -o %:r %<cr>:!./%:r<cr>' : 
 	\ &ft=='c' ? ':!gcc -std=c99 % -o %:r<cr>:!./%:r<cr>' : 
 	\ ':!node ~/Viclib/node_modules/makels.js %:p<cr>')
-":nmap <expr> <leader>s 'r<cr>'
+
 :nmap <expr> <leader>r 'r:!killall node; node ~/Viclib/server.js 8080<cr>'
 
 " NERDTree stuff
-:let NERDTreeIgnore = ['\.js$']
+:let NERDTreeIgnore = ['\.js$','\.pyc$']
 :let NERDTreeChDirMode = 2
-":nmap <leader>t :NERDTree<cr>:set nu<cr>
-":nmap <leader>t :NERDTreeToggle<cr>
 :nmap <expr> <enter> v:count1 <= 1 ? "<C-h>C<C-w>p" : "@_<C-W>99h". v:count1 ."Go<C-w>l"
-":nmap <backspace> <C-h>u<C-w>p
-":nmap <expr> <leader>c "@_<C-W>99h". v:count1 ."Go<C-w>l"
 au VimEnter * NERDTree
 au VimEnter * set nu
 au VimEnter * wincmd p
@@ -63,19 +52,12 @@ au VimEnter * wincmd p
 :inoremap ☮ <esc>
 :vnoremap ☮ <esc>
 :cnoremap ☮ <esc>
-" test test when I'm used to using ;j instead of <esc>
-":inoremap <esc> <esc>a
 
-" OSX shared clipboard
+" shared clipboard
 :set clipboard=unnamed
 
 :map <expr> <space> ":CtrlP ".getcwd()."<cr>"
-":let g:ctrl_p_working_path_mode = 'r'
-":let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn|js)$'
-:set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.js     " MacOSX/Linux
-
-
-
+:set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.js,*.pyc     " MacOSX/Linux
 
 " ConqueTerm
 ":nmap <expr> <leader>c ":sp<cr>12<C-w>+99<C-w>j:ConqueTerm bash<cr>"
@@ -94,23 +76,11 @@ au VimEnter * wincmd p
 :map! <C-k> <esc><C-w>k
 :map! <C-h> <esc><C-w>h
 :map! <C-l> <esc><C-w>l
-"au BufEnter * :!ls
-
 
 " Change Color when entering Insert Mode
 hi cursorline cterm=none ctermbg=white
 au InsertEnter * set cursorline
 au InsertLeave * set nocursorline
-
-"highlight Cursor guifg=white guibg=black
-"highlight iCursor guifg=white guibg=steelblue
-"set guicursor=n-v-c:block-Cursor
-"set guicursor+=i:ver100-iCursor
-"set guicursor+=n-v-c:blinkon0
-"set guicursor+=i:blinkwait10
-
-
-
 
 " vim-ls
 call pathogen#runtime_append_all_bundles()
@@ -134,43 +104,10 @@ hi link lsReservedError NONE
 :set textwidth=0
 :set wrapmargin=0
 
-" leader = ,
-" :let mapleader = "," 
-
 :map , <leader>
 
 " join
 :nnoremap <leader>j J
-
-" node.js
-" :nnoremap <expr> r ':w!<cr>' . 
-"	\ ':!osascript ~/applescripts/chromereload.scpt &<cr>'.
-"	\ (stridx(@%,".ls")!=-1 ? 
-"		\ ':!lsc -d -b -c %<cr>:!' + (stridx(@%,'app')!=-1 ? 'browserify' : 'node') + '.@%[:-4]<cr>' :
-"		\ ':!node %<cr>')
-
-
-" :nmap <expr> R
-"	\ ':w!<cr>' . 
-"	\ (stridx(@%,".ls")!=-1 ? ':!lsc -d -c %<cr>' : '') .
-"	\ ':!sh ~/Viclib/node_modules/make_bundle.sh<cr>' .
-"	\ ':!osascript ~/applescripts/chromereload.scpt &<cr>' .
-"	\ (strlen(matchstr(@%,'\.[jl]s$'))>0 ? ':!node ' .@%[:-4].'.js<cr>' : '')
-
-" \ ':!node ~/Viclib/node_modules/htmlify %<cr>' .
-" :nnoremap <expr> R 
-"	\ ':w!<cr>' . 
-"	\ (stridx(@%,".ls")!=-1 ? ':!lsc -b -c %<cr>' : '') .
-"	\ ':!osascript ~/applescripts/chromereload.scpt &<cr>' .
-"	\ ':!node ' .@%[:-4].'.js<cr>'
-" :nnoremap <expr> R 
-"	\ ':w!<cr>' . 
-"	\ (stridx(@%,".ls")!=-1 ? ':!lsc -b -c %<cr>:!browserify '.@%[:-4].'.js -o '.@%[:-4].'.bundle.js<cr>:!rm '.@%[:-4].'.js<cr>:!mv '.@%[:-4].'.bundle.js '.@%[:-4].'.js<cr>' : '') .
-"	\ ':!osascript ~/applescripts/chromereload.scpt &<cr>'
-
-" ':w!<cr>' . 'r' . ':!osascript ~/applescripts/chromereload.scpt &<cr>'
-" ':!rsync -r -e ssh ~/Viclib/* vh@maia.im:~/Viclib/ &<cr>' 
-":imap <D-s> <esc><D-s>
 
 " default the statusline to green when entering Vim
 hi StatusLine ctermfg=lightblue ctermbg=black
@@ -206,15 +143,6 @@ call pathogen#helptags()
 :nmap f <leader><leader>f
 :vmap f <leader><leader>f
 :omap f <leader><leader>f
-"not necessary anymore becaus eof supasorn's awesome fork with backwards/forward search (:
-":nmap F <leader><leader>F
-":vmap F <leader><leader>F
-":omap F <leader><leader>F
-
-" CTRL+y = redo
-":nmap <C-y> U
-":omap <C-y> U
-":vmap <C-y> U
 
 " MARKS SHORTCUTS, LIST OF MARKS
 :nnoremap m `
@@ -254,19 +182,6 @@ call pathogen#helptags()
 :vnoremap L $
 
 set autoread
-" augroup checktime
-    " au!
-    " if !has("gui_running")
-        " "silent! necessary otherwise throws errors when using command
-        " "line window.
-        " autocmd BufEnter        * silent! checktime
-        " autocmd CursorHold      * silent! checktime
-        " autocmd CursorHoldI     * silent! checktime
-        " autocmd CursorMoved     * silent! checktime
-        " autocmd CursorMovedI    * silent! checktime
-    " endif
-" augroup END
-
 function! Wipeout()
   " list of *all* buffer numbers
   let l:buffers = range(1, bufnr('$'))
@@ -301,7 +216,6 @@ function! Wipeout()
 endfunction
 " :let $PATH=$HOME.'/bin:'.$HOME.'/Android/platform-tools:'.$PATH*/
 " :let mapleader = ","*/
-
 
 
 " FOLDING
