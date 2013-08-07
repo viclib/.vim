@@ -1,5 +1,11 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =3
+let g:netrw_dirhist_cnt =9
 let g:netrw_dirhist_1='/Users/vhsmaia/Viclib/site'
 let g:netrw_dirhist_2='/Users/vhsmaia/orama/site/orama_web'
 let g:netrw_dirhist_3='/Users/vhsmaia/Viclib/node_modules'
+let g:netrw_dirhist_4='/Users/vhsmaia/Viclib/node_modules/appls'
+let g:netrw_dirhist_5='/Users/vhsmaia/Viclib/appls'
+let g:netrw_dirhist_6='/Users/vhsmaia/Viclib/appls/node_modules'
+let g:netrw_dirhist_7='/Users/vhsmaia/Viclib/appls'
+let g:netrw_dirhist_8='/Users/vhsmaia/Viclib/appls/src'
+let g:netrw_dirhist_9='/Users/vhsmaia/Viclib'

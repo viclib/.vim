@@ -36,6 +36,12 @@ set shortmess=atl " no annoying start screen
 	\ &ft=='haskell' ? ':!ghc -o %:r %<cr>:!./%:r<cr>' : 
 	\ &ft=='c' ? ':!gcc -std=c99 % -o %:r<cr>:!./%:r<cr>' : 
 	\ ':!node ~/Viclib/node_modules/makels.js %:p<cr>')
+	"\ expand("%:t")=='index.ls' ? ':!appls '.expand("%:r").'<cr>:!browserrefresh<cr>' :
+	"\ ':!node ~/Viclib/node_modules/makels.js %:p<cr>')
+	"\ expand("%:t")=='index.ls' ? ':!appls '+expand('%:r')+'' :
+	"\ ':!lsc -cp '.expand("%:p").' > '.expand("%:r.js").'<cr>')
+	"\ expand("%:t")=='index.ls' ? ':!appls '.expand("%:t:r").'<cr>' : 
+	"\ ':!lsc -cp '.expand("%:p").' > '.expand("%:r.js").'<cr>')
 
 :nmap <expr> <leader>r 'r:!killall node; node ~/Viclib/server.js 8080<cr>'
 
