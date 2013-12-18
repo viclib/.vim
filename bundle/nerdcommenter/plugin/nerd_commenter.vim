@@ -197,6 +197,8 @@ let s:delimiterMap = {
     \ 'java': { 'left': '//', 'leftAlt': '/*', 'rightAlt': '*/' },
     \ 'javacc': { 'left': '//', 'leftAlt': '/*', 'rightAlt': '*/' },
     \ 'javascript': { 'left': '//', 'leftAlt': '/*', 'rightAlt': '*/' },
+    \ 'racket': { 'left': ';' },
+    \ 'idris': { 'left': '--'},
     \ 'scheme': { 'left': ';', 'leftAlt': '@;{', 'rightAlt': '}' },
     \ 'vim': { 'left': '"'},
     \ 'ls': { 'left': '#', 'leftAlt': '/*', 'rightAlt': '*/' },

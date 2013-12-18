@@ -1,11 +1,12 @@
 set ttyfast
+set nofoldenable
 set ttyscroll=3
 set lazyredraw
 set hidden
-set nowrap        " don't wrap lines*/ 
+set wrap      
 set tabstop=4     " a tab is four spaces 
 set backspace=indent,eol,start " allow backspacing over everything in insert mode 
-set autoindent " always set autoindenting on 
+set autoindent    " always set autoindenting on 
 set number        " always show line numbers 
 set shiftwidth=4  " number of spaces to use for autoindenting 
 set shiftround    " use multiple of shiftwidth when indenting with '<' and '>' 
@@ -26,16 +27,37 @@ set noswapfile
 set nocompatible
 set viminfo='1000,f1,<500,:100,/100,h  "
 set shortmess=atl " no annoying start screen
+set linebreak
+set nolist  " list disables linebreak
+set textwidth=0
+set wrapmargin=0
+
+
+:map z :!clear;
+
+:map j gj
+:map k gk
 
 :nmap <leader>d :w!<cr>:!clear<cr>:!ghc -o %:r %<cr>:!./%:r<cr>
 :nnoremap <expr> <leader>i ':!clear<cr>:w!<cr>:!node ~/Viclib/node_modules/makels.js ~/Viclib/smasharena/index.ls<cr>'
 
+" temp
+let gcc_opts = '-I/usr/local/Qt-5.1.1/include'
 :nnoremap <expr> r ':!clear<cr>:w!<cr>'.(
 	\ &ft=='python' ? ':!python %<cr>' : 
-	\ &ft=='scheme' ? ':!racket %<cr>' : 
+	\ &ft=='scheme' ? ':!csc %<cr>:!./%:r<cr>' : 
+	\ &ft=='racket' ? ':!racket %<cr>' : 
+	\ &ft=='dvl' ? ':!dvl run %<cr>' : 
+	\ &ft=='javascript' ? ':!node %<cr>' :
 	\ &ft=='haskell' ? ':!ghc -o %:r %<cr>:!./%:r<cr>' : 
-	\ &ft=='c' ? ':!gcc -std=c99 % -o %:r<cr>:!./%:r<cr>' : 
-	\ ':!node ~/Viclib/node_modules/makels.js %:p<cr>')
+	\ &ft=='idris' ? ':!idris % -o %:r<cr>:!./%:r<cr>' :
+	\ expand('%:t')=='maingl.cpp' ? ':!clang++ -std=c++11 '.gcc_opts.' -framework OpenGL -framework GLUT % -o %:r;./%:r<cr>' :
+	\ &ft=='c' ? ':!clang -Wall -std=c99 % -o %:r<cr>:!./%:r<cr>' : 
+	\ &ft=='cpp' ? ':!clang++ ' . gcc_opts . ' -std=c++11 -stdlib=libc++ % -o %:r<cr>:!./%:r<cr>' : 
+	\ &ft=='agda' ? ':!agda % -o %:r<cr>:!./%:r<cr>' :
+	\ &ft=='ls' ? ':!node ~/Viclib/node_modules/makels.js %:p<cr>' :
+	\ ':!lis % > %:r.js<cr>:!node %:r.js<cr>')
+	"\ &ft=='cpp' ? ':!g++ % -o %:r<cr>:!./%:r<cr>' : 
 	"\ expand("%:t")=='index.ls' ? ':!appls '.expand("%:r").'<cr>:!browserrefresh<cr>' :
 	"\ ':!node ~/Viclib/node_modules/makels.js %:p<cr>')
 	"\ expand("%:t")=='index.ls' ? ':!appls '+expand('%:r')+'' :
@@ -43,10 +65,10 @@ set shortmess=atl " no annoying start screen
 	"\ expand("%:t")=='index.ls' ? ':!appls '.expand("%:t:r").'<cr>' : 
 	"\ ':!lsc -cp '.expand("%:p").' > '.expand("%:r.js").'<cr>')
 
-:nmap <expr> <leader>r 'r:!killall node; node ~/Viclib/server.js 8080<cr>'
+" :nmap <expr> <leader>r 'r:!killall node; node ~/Viclib/server.js 8080<cr>'
 
 " NERDTree stuff
-:let NERDTreeIgnore = ['\.js$','\.pyc$']
+":let NERDTreeIgnore = ['\.js$','\.pyc$']
 :let NERDTreeChDirMode = 2
 :nmap <expr> <enter> v:count1 <= 1 ? "<C-h>C<C-w>p" : "@_<C-W>99h". v:count1 ."Go<C-w>l"
 au VimEnter * NERDTree
@@ -63,7 +85,8 @@ au VimEnter * wincmd p
 :set clipboard=unnamed
 
 :map <expr> <space> ":CtrlP ".getcwd()."<cr>"
-:set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.js,*.pyc     " MacOSX/Linux
+":set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.js,*.pyc     " MacOSX/Linux
+:set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc     " MacOSX/Linux
 
 " ConqueTerm
 ":nmap <expr> <leader>c ":sp<cr>12<C-w>+99<C-w>j:ConqueTerm bash<cr>"
@@ -103,12 +126,6 @@ hi link lsReservedError NONE
 " cursor always in middle of screen
 :set so=99999
 
-" word wrap
-:set wrap
-:set linebreak
-:set nolist  " list disables linebreak
-:set textwidth=0
-:set wrapmargin=0
 
 :map , <leader>
 
@@ -187,105 +204,12 @@ call pathogen#helptags()
 :vnoremap H ^
 :vnoremap L $
 
-set autoread
-function! Wipeout()
-  " list of *all* buffer numbers
-  let l:buffers = range(1, bufnr('$'))
+" idris ft
+"au BufNewFile,BufRead *.ls set filetype=Livescript
+au BufNewFile,BufRead *.idr set filetype=idris
+au BufNewFile,BufRead *.agda set filetype=agda
+au BufNewFile,BufRead *.lis set filetype=lis
+au BufNewFile,BufRead *.dvl set filetype=dvl
 
-  " what tab page are we in?
-  let l:currentTab = tabpagenr()
-  try
-    " go through all tab pages
-    let l:tab = 0
-    while l:tab < tabpagenr('$')
-      let l:tab += 1
-
-      " go through all windows
-      let l:win = 0
-      while l:win < winnr('$')
-        let l:win += 1
-        " whatever buffer is in this window in this tab, remove it from
-        " l:buffers list
-        let l:thisbuf = winbufnr(l:win)
-        call remove(l:buffers, index(l:buffers, l:thisbuf))
-      endwhile
-    endwhile
-
-    " if there are any buffers left, delete them
-    if len(l:buffers)
-      execute 'bwipeout' join(l:buffers)
-    endif
-  finally
-    " go back to our original tab page
-    execute 'tabnext' l:currentTab
-  endtry
-endfunction
-" :let $PATH=$HOME.'/bin:'.$HOME.'/Android/platform-tools:'.$PATH*/
-" :let mapleader = ","*/
-
-
-" FOLDING
-map - zr
-map + zm
-"set foldtext=MyFoldText()
-"set foldmethod=expr
-"set foldexpr=GetPotionFold(v:lnum)
-autocmd BufEnter * normal zR
-function! MyFoldText()
-	let lines = 1 + v:foldend - v:foldstart
-	let spaces = repeat(' ', indent(v:foldstart))
-
-	let linestxt = 'lines'
-	if lines == 1
-		linestxt = 'line'
-	endif
-
-	let firstline = getline(v:foldstart)
-	let line = firstline[ind : ind+80]
-
-	return spaces . substitute(getline(v:foldstart), "\t", "", "g")
-	return spaces . '+' . v:folddashes . ' ' . lines . ' ' . linestxt . ': ' . line . ' '
-endfunction
-
-
-function! GetPotionFold(lnum)
-    if getline(a:lnum) =~? '\v^\s*$'
-		return '-1'
-	endif
-
-	let this_indent = IndentLevel(a:lnum)
-	let next_indent = IndentLevel(NextNonBlankLine(a:lnum))
-
-	if next_indent == this_indent
-		return this_indent
-	elseif next_indent < this_indent
-		return this_indent
-	elseif next_indent > this_indent
-		return '>' . next_indent
-	endif
-endfunction
-
-function! IndentLevel(lnum)
-    return indent(a:lnum) / &shiftwidth
-endfunction
-
-function! NextNonBlankLine(lnum)
-    let numlines = line('$')
-	let current = a:lnum + 1
-
-	while current <= numlines
-		if getline(current) =~? '\v\S'
-			return current
-		endif
-
-		let current += 1
-	endwhile
-
-	return -2
-endfunction
-highlight Folded ctermfg=Black ctermbg=white
-
-
-
-
-
+" C++11 syntax
+au BufNewFile,BufRead *.cpp set syntax=cpp11
